@@ -1,0 +1,84 @@
+<template>
+  <view class="container" wx:if="{{init}}">
+    <!--TAB 页-->
+    <ZanTab :tab.sync="tab" @change.user="switchTab" />
+
+    <!--列表展现-->
+    <repeat for="{{page.list}}" key="index" index="index" item="item">
+      <NoticeItem :notice.sync="item" />
+    </repeat>
+
+    <!-- 加载提示 -->
+    <Loadmore :page.sync="page"/>
+
+    <!--操作栏-->
+    <ActionBar @tap.user="add" okText="新增公告" cancelText="返回" />
+  </view>
+
+  <!--占位符-->
+  <Placeholder :show.sync="isPageEmpty" message="您还没有相关公告信息"/>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import base from '../../mixins/base';
+  import notice from '../../api/notice';
+  import pagination from '../../mixins/pagination';
+  import Placeholder from '../../components/common/placeholder';
+  import ZanTab from '../../components/zanui/tab';
+  import ActionBar from '../../components/common/action_bar';
+  import Event from '../../utils/Event';
+  import Loadmore from '../../components/weui/loadmore';
+  import NoticeItem from '../../components/notice/item';
+
+  export default class NoticeIndex extends wepy.page {
+    def = {
+      init: false,
+      page: {
+        list: [
+        ]
+      },
+      tab: {
+        list: [
+          {id: 'SHOW', title: '发布中'},
+          {id: 'HIDE', title: '已失效'}
+        ],
+        selectedId: 'SHOW'
+      }
+    }
+    data = {...this.def};
+    async onLoad () {
+      this.page = notice.page();
+      await this.next();
+      Event.listen(Event.NOTICE_LIST_UPDATE, this.update.bind(this), this);
+    };
+    params() {
+      return {status: this.tab.selectedId};
+    }
+    methods = {
+      switchTab() {
+        this.reload();
+      },
+      add() {
+        this.$navigate('edit?mode=create');
+      }
+    }
+    events = {};
+    components = {
+      Placeholder: Placeholder,
+      ZanTab: ZanTab,
+      ActionBar: ActionBar,
+      Loadmore: Loadmore,
+      NoticeItem: NoticeItem
+    };
+    mixins = [base, pagination];
+    config = {
+      navigationBarTitleText: '公告管理',
+      enablePullDownRefresh: true
+    };
+  }
+</script>
+
+<style lang="scss">
+  @import "../../styles/variable";
+</style>

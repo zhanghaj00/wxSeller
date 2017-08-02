@@ -1,0 +1,83 @@
+<template>
+  <view class="container" wx:if="{{init}}">
+    <!--TAB 页-->
+    <ZanTab :tab.sync="tab" @change.user="switchTab" />
+
+
+    <!--列表展现-->
+    <repeat for="{{page.list}}" key="index" index="index" item="item">
+      <GoodsScoreItem />
+    </repeat>
+
+    <!-- 加载提示 -->
+    <Loadmore :page.sync="page"/>
+  </view>
+
+  <!--占位符-->
+  <Placeholder :show.sync="isPageEmpty" message="该商品还没有评价"/>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import base from '../../mixins/base';
+  import comment from '../../api/comment';
+  import pagination from '../../mixins/pagination.wpy';
+  import Placeholder from '../../components/common/placeholder';
+  import ZanTab from '../../components/zanui/tab';
+  import ActionBar from '../../components/common/action_bar';
+  import Loadmore from '../../components/weui/loadmore';
+  import CommentItem from '../../components/goods/comment_item';
+
+  export default class GoodsScoreIndex extends wepy.page {
+    def = {
+      init: true,
+      page: {
+        list: []
+      },
+      tab: {
+        list: []
+      },
+      goodsId: ''
+    }
+    data = {...this.def};
+    async onLoad ({goodsId}) {
+      this.goodsId = goodsId;
+      const count = await comment.count(goodsId);
+      this.tab = {
+        list: [
+          {id: 'GOOD', title: `好评（${count.GOOD}）`},
+          {id: 'NORMAL', title: `中评（${count.NORMAL}）`},
+          {id: 'BAD', title: `差评（${count.BAD}）`}
+        ],
+        selectedId: 'GOOD'
+      };
+      this.page = comment.page();
+      await this.next();
+    };
+    params() {
+      return {status: this.tab.selectedId, goods_id: this.goodsId};
+    }
+    methods = {
+      switchTab() {
+        this.reload();
+      }
+    }
+    events = {};
+    components = {
+      Placeholder: Placeholder,
+      ZanTab: ZanTab,
+      ActionBar: ActionBar,
+      Loadmore: Loadmore,
+      GoodsScoreItem: CommentItem
+    };
+    mixins = [base, pagination];
+    config = {
+      navigationBarTitleText: '商品评价',
+      enablePullDownRefresh: true
+    };
+  }
+</script>
+
+<style lang="scss">
+  @import "../../styles/variable";
+</style>

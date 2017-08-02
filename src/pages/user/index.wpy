@@ -1,0 +1,73 @@
+<template>
+
+  <!-- 头图区域 -->
+  <AvatarPanel :info.sync="shop" />
+
+  <view class="h-gap" />
+
+  <view class="weui-cells-form">
+    <NavNotice title="店铺公告" url="../notice/list" />
+
+    <NavDelivery title="运费模板" url="../delivery/list" />
+
+    <NavShops title="切换店铺" @tap.user="shops" />
+
+    <NavLogout title="切换账号" @tap.user="logout" />
+
+  </view>
+
+  <Copyright />
+
+  <view class="tab-border" />
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import base from '../../mixins/base';
+  import auth from '../../api/auth';
+  import shop from '../../api/shop';
+  import Tips from '../../utils/Tips';
+  import Navigator from '../../components/weui/navigator';
+  import Copyright from '../../components/common/copyright';
+  import AvatarPanel from '../../components/common/avatar_panel';
+
+  export default class UserIndex extends wepy.page {
+    data = {
+      shop: {},
+    };
+    async onLoad () {
+      this.shop = await shop.info();
+      this.loaded();
+    };
+    methods = {
+      async shops() {
+        await Tips.confirm('是否确认切换店铺？');
+        await auth.removeConfig('shop_id');
+        this.$redirect('../home/shops');
+      },
+      async logout() {
+        await Tips.confirm('是否确认退出登录？');
+        await auth.removeConfig('shop_id');
+        await auth.removeConfig('login_code');
+        this.$redirect('../home/index');
+      }
+    };
+    components = {
+      Copyright: Copyright,
+      NavNotice: Navigator,
+      NavDelivery: Navigator,
+      NavShops: Navigator,
+      NavLogout: Navigator,
+      AvatarPanel: AvatarPanel
+    };
+    config = {
+      navigationBarTitleText: '我的信息'
+    };
+    mixins = [base];
+  }
+</script>
+
+<style lang="scss">
+  @import "../../styles/variable";
+
+</style>

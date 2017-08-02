@@ -1,0 +1,93 @@
+<template>
+  <view class="container" wx:if="{{init}}">
+    <!--TAB 页-->
+    <CategoryTab :tab="tab" :categories.sync="categories" categoriesTitle="商品分类" @change.user="change"  />
+
+    <!-- 商品列表 -->
+    <repeat for="{{page.list}}" key="index" index="index" item="item">
+      <GoodsItem :goods="item"></GoodsItem>
+    </repeat>
+
+    <!-- 加载提示 -->
+    <Loadmore :page.sync="page"/>
+
+    <!--操作栏-->
+    <ActionBar @tap.user="add" okText="新增商品" cancelText="返回" />
+
+    <!--占位符-->
+    <Placeholder :show.sync="isPageEmpty" message="您还没有相关商品"/>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import base from '../../mixins/base';
+  import pagination from '../../mixins/pagination';
+  import goods from '../../api/goods';
+  import GoodsItem from '../../components/goods/item';
+  import CategoryTab from '../../components/zanui/category-tab';
+  import ActionBar from '../../components/common/action_bar';
+  import Placeholder from '../../components/common/placeholder';
+  import Loadmore from '../../components/weui/loadmore';
+  import Event from '../../utils/Event';
+
+  export default class GoodsList extends wepy.page {
+    def = {
+      init: false,
+      page: {
+        list: []
+      },
+      tab: {
+        list: [
+          {id: 'onSale', title: '出售中'},
+          {id: 'sellOut', title: '售罄的'},
+          {id: 'offSale', title: '仓库中'}
+        ],
+        selectedId: 'onSale',
+        categoryId: '0',
+        scroll: false
+      },
+      categories: []
+    }
+    data = {...this.def};
+    async onLoad () {
+      this.page = goods.page(this);
+      this.goods = this.page.list;
+      this.categories = [];
+      await this.next();
+      Event.listen(Event.GOODS_LIST_UPDATE, this.update.bind(this), this);
+    };
+    // 获取分页参数
+    params() {
+      return {
+        goods_status: this.tab.selectedId,
+        category_id: this.tab.categoryId
+      };
+    }
+    methods = {
+      add() {
+        this.$navigate('edit?mode=create');
+      },
+      change() {
+        this.reload();
+      }
+    }
+    events = {};
+    components = {
+      CategoryTab: CategoryTab,
+      Placeholder: Placeholder,
+      GoodsItem: GoodsItem,
+      ActionBar: ActionBar,
+      Loadmore: Loadmore
+    };
+    mixins = [base, pagination];
+    config = {
+      navigationBarTitleText: '商品管理',
+      enablePullDownRefresh: true
+    };
+  }
+</script>
+
+<style lang="scss">
+  @import "../../styles/variable";
+</style>

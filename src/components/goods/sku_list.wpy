@@ -1,0 +1,61 @@
+<template>
+  <!--SKU区域// 组件化-->
+  <repeat for="{{skuList}}" key="sku" index="index" item="item">
+    <Sku :info.sync="item" index.sync="index" :skuEditable.sync="skuEditable" @remove.user="remove" @change.user="change" />
+  </repeat>
+
+  <!--添加商品型号-->
+  <view class="sku-add-btn row-end" @tap="add">
+    <image class="icon" src="/images/icons/plus.png"></image><text class="ml10">添加商品型号</text>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import Sku from './sku';
+  export default class SkuList extends wepy.component {
+    props = {
+      skuList: {
+        twoWay: true
+      }
+    };
+    data = {
+      skuEditable: true
+    };
+    components = {
+      Sku: Sku
+    };
+    methods = {
+      add() {
+        this.skuList.push({});
+      },
+      remove(index) {
+        this.skuList.splice(index, 1);
+      },
+      change(info) {
+        this.skuList[info.index][info.fieldName] = info.fieldValue;
+      }
+    };
+    watch = {
+      skuList() {
+        this.resetSkuEditable();
+        this.$apply();
+      }
+    }
+    resetSkuEditable() {
+      this.skuEditable = this.skuList.length > 1;
+    }
+    events = {};
+    onLoad() {
+      this.resetSkuEditable();
+    }
+  }
+</script>
+
+<style lang="scss">
+  @import "../../styles/variable";
+  .sku-add-btn{
+    padding: 10px 20px;
+  }
+
+</style>
