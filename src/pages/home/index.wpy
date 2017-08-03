@@ -63,6 +63,9 @@
             }
           }
         }
+        if(this.checkLoginTime()){
+          await auth.login();
+        }
       } catch (e) {
         await auth.removeConfig('login_code');
       } finally {

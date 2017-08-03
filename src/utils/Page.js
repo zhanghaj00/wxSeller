@@ -76,12 +76,12 @@ export default class Pagination {
   reset () {
     this.empty = true;
     this.toClear = true;
-    this.pageNum = 1;
+    this.pageNum = 0;
     this.reachBottom = false;
   }
   clear () {
     this.toClear = false;
-    this.pageNum = 1;
+    this.pageNum = 0;
     this.list = [];
   }
 

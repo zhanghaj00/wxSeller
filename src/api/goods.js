@@ -16,7 +16,7 @@ export default class goods extends base {
    * 商品分类
    */
   static async getInnerCategories() {
-    const url = `${this.baseUrl}/goods/inner_category`;
+    const url = `${this.baseUrl}/goods/innerCategory`;
     return await this.get(url);
   }
 
@@ -24,7 +24,7 @@ export default class goods extends base {
    *  新增商品分类
    */
   static async addInnerCategories(name) {
-    const url = `${this.baseUrl}/goods/inner_category`;
+    const url = `${this.baseUrl}/goods/addGoodsCategory`;
     const param = {
       name: name,
       pid: 0,
