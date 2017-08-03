@@ -114,7 +114,7 @@ export default class goods extends base {
       skuList = goods.goodsSkuInfo.goodsSkuDetails.map(item => {
         const price = parseFloat(item.goodsSkuDetailBase.price).toFixed(2);
         const sku = item.sku;
-        const stock = goods.goodsStocks.find(item => item.sku == sku).stock;
+        const stock = 1;//goods.goodsStocks.find(item => item.sku == sku).stock;
         return {price, sku, stock};
       });
     }

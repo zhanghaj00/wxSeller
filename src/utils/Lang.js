@@ -39,6 +39,7 @@ export default class Lang {
   }
   // 事件转日期
   static convertTimestapeToDay(timestape) {
+    if(timestape == null){ return "" }
     return timestape.substring(0, timestape.indexOf(' ')).replace(/-/g, '.');
   }
 }

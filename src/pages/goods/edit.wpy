@@ -133,14 +133,14 @@
     data = {...this.def};
     async onLoad ({goodsId, mode}) {
       this.mode = mode;
-      this.innerCategories = await goods.getInnerCategories();
+      this.innerCategories = [];
       if (this.mode == 'edit') {
         const detail = await goods.detail(goodsId);
         this.pictures = detail.pictures;
         this.input = detail.input;
         this.details = detail.details;
         this.skuList = detail.skuList;
-        this.input.inner = this.innerCategories.find(item => item.id == this.input.innerCid).name
+        this.input.inner = '';//this.innerCategories.find(item => item.id == this.input.innerCid).name
       }
       Event.listen(Event.GOODS_DETAILS_UPDATE, this.detailsUpdate.bind(this), this);
       this.loaded();

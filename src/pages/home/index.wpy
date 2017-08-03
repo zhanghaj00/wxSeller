@@ -6,32 +6,9 @@
       <text>乐享商家助手</text>
     </view>
     <view class="page__bd form">
-      <view class="weui-cells weui-cells_after-title">
-        <view class="weui-cell weui-cell_input weui-cell_vcode">
-          <view class="weui-cell__hd">
-            <view class="weui-label">手机号</view>
-          </view>
-          <view class="weui-cell__bd">
-            <input class="weui-input" id="phone" type="number" @input="input" maxlength="11" placeholder="请输入手机号" />
-          </view>
-          <view class="weui-cell__ft">
-            <!--<view class="weui-vcode-btn {{isWaiting ? 'muted' : ''}}" @tap="onCodeTap">{{btnText}}</view>-->
-            <VCode  @tap.user="code" />
-          </view>
-        </view>
-        <view class="weui-cell weui-cell_input weui-cell_vcode">
-          <view class="weui-cell__hd">
-            <view class="weui-label">验证码</view>
-          </view>
-          <view class="weui-cell__bd">
-            <input class="weui-input" type="number"  id="code" maxlength="6"  @input="input" placeholder="请输入验证码" />
-          </view>
-        </view>
-      </view>
-      <view class="weui-cells__tips">提示：未注册用户将进入示例店铺</view>
 
       <view class="weui-btn-area">
-        <button class="weui-btn" type="primary" @tap="confirm">确定</button>
+        <button class="weui-btn" type="primary" @tap="confirm">登录</button>
       </view>
     </view>
   </view>
@@ -54,7 +31,7 @@
     data = {...this.def}
     async onLoad () {
       try {
-        const loginCode = auth.getConfig('login_code');
+        /*const loginCode = auth.getConfig('login_code');
         if (loginCode) {
           const result = await auth.check(loginCode);
           if (result) {
@@ -70,13 +47,32 @@
             await auth.login();
           }
         }
-        console.log(`login_fail: ${loginCode}`);
+        console.log(`login_fail: ${loginCode}`);*/
+        const loginCode = auth.getConfig('login_code')
+
+        if(loginCode == null){
+          await auth.login();
+        }else{
+          const result = await auth.check(loginCode);
+          if (result) {
+            const shopId = auth.getConfig('shop_id');
+            if (shopId != null) {
+              this.$switch('home');
+            } else {
+              this.$redirect('shops');
+            }
+          }
+        }
       } catch (e) {
         await auth.removeConfig('login_code');
       } finally {
         this.loaded();
       }
     }
+    confirm(){
+      this.loaded();
+    }
+
     checkLoginTime () {
       if (this.retry > 5) {
         Tips.error('服务器连接失败');
@@ -86,7 +82,9 @@
       return true;
     }
     methods = {
-
+      async loginIn(){
+        return await auth.login();
+      }
     };
     mixins = [input, base];
     config = {
