@@ -174,6 +174,7 @@
         data.globalCid = 1; // 待完善
         data.status = this.input.status ? 0 : 1;
         data.innerCid = this.innerCategories.find(item => item.name == this.input.inner).id;
+        data.innerCidName = this.innerCategories.find(item => item.name == this.input.inner).name;
         // 详情信息
         data.goodsDetails = this.details;
         // 处理SKU信息

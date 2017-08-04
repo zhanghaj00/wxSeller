@@ -39,11 +39,11 @@
       },
       tab: {
         list: [
-          {id: 'onSale', title: '出售中'},
-          {id: 'sellOut', title: '售罄的'},
-          {id: 'offSale', title: '仓库中'}
+          {id: '0', title: '出售中'},
+          {id: '1', title: '售罄的'},
+          {id: '2', title: '仓库中'}
         ],
-        selectedId: 'onSale',
+        selectedId: '0',
         categoryId: '0',
         scroll: false
       },
@@ -60,8 +60,8 @@
     // 获取分页参数
     params() {
       return {
-        goods_status: this.tab.selectedId,
-        category_id: this.tab.categoryId
+        status: this.tab.selectedId,
+        innerCid: this.tab.categoryId
       };
     }
     methods = {
