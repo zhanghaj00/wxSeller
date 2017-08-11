@@ -1,17 +1,14 @@
 <template>
   <!--轮播图-->
-  <swiper class="shop-swiper" indicator-dots="true" autoplay="true" interval="5000" wx:if="{{shop.images.length > 0}}" catchtap="preview">
-    <swiper-item wx:for="{{shop.images}}" wx:key="id">
-      <image mode="aspectFill" src="{{item.url}}"></image>
-    </swiper-item>
-  </swiper>
+  <ImageUploader :pictures.sync="pictures" />
 
   <view class="hr"></view>
 
   <!--店铺名称-->
   <view class="name-box row-center">
-    <image class="icon-lg" src="{{shop.avatar}}"/>
-    <text class="shop-name">{{shop.name}}</text>
+      <view class="weui-cell__bd">
+          <input class="weui-input" id="name" @input="input" value="{{input.name}}" placeholder="商店名称"/>
+      </view>
   </view>
 
   <view class="hr"></view>
@@ -19,40 +16,106 @@
   <view class="weui-cells weui-cells-form">
     <view class="weui-cell">
       <view class="weui-cell__bd">联系电话</view>
-      <view class="weui-cell__ft">{{shop.phone}}</view>
+        <view class="weui-cell__bd">
+            <input class="weui-input" id="phone" @input="input" value="{{input.phone}}" placeholder="联系电话"/>
+        </view>
     </view>
     <view class="weui-cell">
       <view class="weui-cell__bd" style="min-width: 150rpx;">店铺地址</view>
-      <view class="weui-cell__ft">{{shop.address}}</view>
+        <view class="weui-cell__bd">
+            <input class="weui-input" id="address" @input="input" value="{{input.address}}" placeholder="地址"/>
+        </view>
     </view>
     <view class="weui-cell">
       <view class="weui-cell__bd" style="min-width: 150rpx;">店铺描述</view>
-      <view class="weui-cell__ft">{{shop.describe}}</view>
-    </view>
-    <view class="weui-cell">
-      <view class="weui-cell__bd">店铺分类</view>
-      <view class="weui-cell__ft">{{shop.categoryName}}</view>
+        <view class="weui-cell__bd">
+            <input class="weui-textarea" id="describe" value="{{input.describe}}" placeholder="输入商品描述" style="height: 2.3em" maxlength="30" @input="input" />
+            <view class="weui-textarea-counter">{{input.describe ? input.describe.length : 0}}/30</view>
+        </view>
     </view>
   </view>
+  <ActionBar @tap.user="submit" />
 </template>
 
 <script>
   import wepy from 'wepy';
   import base from '../../mixins/base';
+  import input from '../../mixins/input';
   import shop from '../../api/shop';
+  import ImageUploader from '../../components/goods/image_uploader';
+  import ActionBar from '../../components/common/action_bar';
+  import FormTips from '../../components/weui/tips';
+  import Tips from '../../utils/Tips';
   // import Tips from '../../utils/Tips';
+  import goods from '../../api/goods';
+  import Event from '../../utils/Event';
 
   export default class ShopDetail extends wepy.page {
-    data = {
-      shop: {}
-    };
+    def = {
+      input: {
+        status: true
+      },
+      pictures: [],
+      images: [],
+      mode: 'create',
+      init: false
+    }
+    data = {...this.def};
     async onLoad () {
-     // this.shop = await shop.info();
       this.loaded();
     };
     events = {};
-    components = {};
-    mixins = [base];
+    methods = {
+      async submit() {
+        if (!this.validate()) {
+           return;
+     }
+        if (this.mode == 'create') {
+        for (let picture of this.pictures) {
+         if (picture.url.substring(0, 6) == 'wxfile') {
+           const result = await goods.image(picture.url);
+           const image = JSON.parse(result);
+           this.data.images.push(image.data);
+         }
+         };
+         const param = this.input;
+         param.images = this.data.images;
+         param.avatar = this.data.images.length > 0 ? this.data.images[0].url:'';
+         await shop.create(param)
+         await Tips.success('创建成功！');
+       }
+       Event.emit(Event.SHOP_LIST_UPDATE);
+       wepy.navigateBack();
+      }
+      };
+    validate() {
+      const rules = [
+        {
+          value: this.input.name,
+          method: 'required',
+          message: '店铺名称不能为空'
+        },
+        {
+          value: this.input.name,
+          method: 'minlength',
+          param: 2,
+          message: '店铺名称太短'
+        },
+        {
+          value: this.input.name,
+          method: 'maxlength',
+          param: 20,
+          message: '店铺名称太长'
+        }];
+      return this.check(rules);
+    }
+    components = {
+      ImageUploader: ImageUploader,
+      ActionBar: ActionBar,
+      Tips: FormTips
+    };
+
+    mixins = [base,input];
     config = {
       navigationBarTitleText: '新增店铺'
     };

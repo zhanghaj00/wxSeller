@@ -1,9 +1,9 @@
 <template>
   <view class="weui-footer mt20">
     <view class="weui-footer__links">
-      <navigator url="" class="weui-footer__link">乐享启创提供技术支持</navigator>
+      <navigator url="" class="weui-footer__link">没有人提供技术支持</navigator>
     </view>
-    <view class="weui-footer__text">Copyright © 2017 leshare.shop</view>
+    <view class="weui-footer__text">Copyright © 2017 dsz.shop</view>
   </view>
 </template>
 

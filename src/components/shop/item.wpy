@@ -1,7 +1,7 @@
 <template>
   <view class="item-box row">
     <image class="shop-icon icon-xl" src="{{shop.avatar}}"/>
-    <text class="shop-title xxl">{{shop.shopName}}</text>
+    <text class="shop-title xxl">{{shop.name}}</text>
   </view>
 </template>
 

@@ -25,7 +25,7 @@ export default class count extends base {
     const result = {};
     for (let i = 1; i <= 8; i++) {
       const item = data.find(item => item.status == i);
-      result[`n${i}`] = item != null ? item.total : 0;
+      result[`n${i}`] = item != null ? item.orderGoodsInfos.length : 0;
     }
     return result;
   }

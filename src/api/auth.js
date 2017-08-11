@@ -25,7 +25,7 @@ export default class auth extends base {
    * 检查登录情况
    */
   static async check(loginCode) {
-    const url = `${this.baseUrl}/auth/check?sessionId=${loginCode}`;
+    const url = `${this.baseUrl}/auth/check?third_session=${loginCode}`;
     const data = await this.get(url)
     return data;
   }

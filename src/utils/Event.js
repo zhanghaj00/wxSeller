@@ -11,6 +11,8 @@ export default class Event {
   static GOODS_LIST_UPDATE = 'GOODS_LIST_UPDATE';
   // 卡券列表更新事件
   static COUPON_LIST_UPDATE = 'COUPON_LIST_UPDATE';
+  // 店铺更新事件
+  static SHOP_LIST_UPDATE = 'SHOP_LIST_UPDATE';
   // 公告列表更新事件
   static NOTICE_LIST_UPDATE = 'NOTICE_LIST_UPDATE';
   static listen(eventName, callback, observer) {

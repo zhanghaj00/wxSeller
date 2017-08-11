@@ -52,20 +52,23 @@
 
         if(loginCode == null){
           await auth.login();
+          this.onLoad();
         }else{
           const result = await auth.check(loginCode);
-          if (result) {
+          if (result.appId != null) {
             const shopId = auth.getConfig('shop_id');
             if (shopId != null) {
               this.$switch('home');
             } else {
               this.$redirect('shops');
             }
+          }else{
+            if(this.checkLoginTime()){
+              this.onLoad();
+            }
           }
         }
-        if(this.checkLoginTime()){
-          this.onLoad();
-        }
+
       } catch (e) {
         await auth.removeConfig('login_code');
       } finally {
