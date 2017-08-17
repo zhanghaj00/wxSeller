@@ -117,7 +117,7 @@
             this.tips('请正确填写修改价格');
             return;
           }
-          const orderId = this.order.orderId;
+          const orderId = this.order.id;
           const param = {
             modifyPrice: this.input.modifyPrice,
             modifyPost: this.input.modifyPost

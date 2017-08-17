@@ -63,7 +63,7 @@ export default class order extends base {
    */
   static async send(orderId, param) {
     const url = `${this.baseUrl}/orders/${orderId}/send`;
-    return await this.put(url, param);
+    return await this.post(url, param);
   }
 
   /**
@@ -72,7 +72,7 @@ export default class order extends base {
   static async note(orderId, sellerNote) {
     const url = `${this.baseUrl}/orders/${orderId}/note`;
     const param = {sellerNote};
-    return await this.put(url, param);
+    return await this.post(url, param);
   }
 
   /**
@@ -81,7 +81,7 @@ export default class order extends base {
   static async close(orderId, note) {
     const url = `${this.baseUrl}/orders/${orderId}/status/close`;
     const param = {orderId, note};
-    return await this.put(url, param);
+    return await this.post(url, param);
   }
 
   /**
@@ -89,7 +89,7 @@ export default class order extends base {
    */
   static async reprice(orderId, param) {
     const url = `${this.baseUrl}/orders/${orderId}/modify_money`;
-    return await this.put(url, param);
+    return await this.post(url, param);
   }
 
   /**
@@ -100,7 +100,7 @@ export default class order extends base {
     const param = {
       isAgree: 1
     };
-    return await this.put(url, param);
+    return await this.post(url, param);
   }
 
   /**
