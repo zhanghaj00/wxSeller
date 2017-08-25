@@ -4,6 +4,7 @@
   export default class base extends wepy.mixin {
     loaded() {
       this.init = true;
+      this.leiyi = true;
       this.$apply();
       Tips.loaded();
     }

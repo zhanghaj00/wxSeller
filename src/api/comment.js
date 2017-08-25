@@ -32,7 +32,7 @@ export default class comment extends base {
    */
   static _processGoodsComment(data) {
     const comment = {};
-    comment.createTime = data.createTime.substring(0, 10);
+    comment.createTime = data.createTime?data.createTime.substring(0, 10):'未知';
     comment.starArr = [0, 0, 0, 0, 0];
     for (let i = 0; i < data.star; i++) {
       comment.starArr[i] = 1;
@@ -41,6 +41,14 @@ export default class comment extends base {
     comment.avatar = data.customer.avatarUrl;
     comment.nickName = data.customer.nickName;
     comment.comment = data.comment;
+    if(data.star && data.star >=2){
+      comment.id = 'BAD';
+    }
+    if(data.star && data.star ==3){
+      comment.id = 'NORMAL';
+    }else{
+      comment.id = "GOOD";
+    }
     return comment;
   }
 }

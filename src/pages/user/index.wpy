@@ -10,6 +10,8 @@
 
     <NavDelivery title="运费模板" url="../delivery/list" />
 
+    <NavSupplier title="供应商管理" url="../supplier/list" />
+
     <NavShops title="切换店铺" @tap.user="shops" />
 
     <NavLogout title="切换账号" @tap.user="logout" />
@@ -56,6 +58,7 @@
       Copyright: Copyright,
       NavNotice: Navigator,
       NavDelivery: Navigator,
+      NavSupplier: Navigator,
       NavShops: Navigator,
       NavLogout: Navigator,
       AvatarPanel: AvatarPanel

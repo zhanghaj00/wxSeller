@@ -15,7 +15,7 @@ export default class delivery extends base {
      */
     static create(delivery) {
         const url = `${this.baseUrl}/delivery`;
-        return this.post(url, [delivery]);
+        return this.post(url, delivery);
     }
 
     /**

@@ -1,13 +1,13 @@
 <template>
     <view class="notice-box column">
         <view class="content-box row">
-            <text class="lg">{{delivery.name}}</text>
-            <text class="desc inline_nowrap">￥{{delivery.limitPrice}}起送 | 配送费￥{{delivery.fee}} | {{delivery.location}}| 配送地址 :{{delivery.location}} | 所属分类 :{{delivery.innerCidName}}</text>
+            <text class="lg">{{supplier.name}}</text>
+            <text class="desc inline_nowrap">￥{{supplier.desc}}</text>
 
         </view>
         <view class="btn-box row-end">
-            <view class="zan-btn zan-btn--small"  @tap="delete({{delivery.id}})" >删除</view>
-            <view class="zan-btn zan-btn--small  zan-btn--primary"  @tap="edit({{delivery.id}})">编辑</view>
+            <view class="zan-btn zan-btn--small"  @tap="delete({{supplier.id}})" >删除</view>
+            <view class="zan-btn zan-btn--small  zan-btn--primary"  @tap="edit({{supplier.id}})">编辑</view>
         </view>
     </view>
 </template>
@@ -16,25 +16,25 @@
     import wepy from 'wepy';
     import Tips from '../../utils/Tips';
     import Event from '../../utils/Event';
-    import delivery from '../../api/delivery';
-    export default class DeliveryItem extends wepy.component {
+    import supplier from '../../api/supplier';
+    export default class SupplierItem extends wepy.component {
         props = {
-            delivery: {}
+            supplier: {}
         };
         data = {};
         methods = {
             async delete(id) {
                 await Tips.confirm('确认删除？');
-                await delivery.remove(id);
+                await supplier.remove(id);
                 await Tips.success('删除成功');
-                Event.emit(Event.DELIVERY_LIST_UPDATE);
+                Event.emit(Event.SUPPLIER_LIST_UPDATE);
             },
             edit(id) {
                 const param = {
                     mode: 'edit',
-                    deliveryId: id
+                    supplierId: id
                 }
-                this.$root.$preload('delivery', this.delivery);
+                this.$root.$preload('supplier', this.supplier);
                 this.$root.$navigate('edit', param);
             }
         };

@@ -6,7 +6,7 @@
         <view class="weui-cells-form">
             <Picker :range="type" title="配送方式" fieldName="type" :input.sync="input" @input.user="seletedType"/>
             <InputText_name title="模板名称" :input.sync="input"/>
-            <view class="weui-cell"  @tap="showInner">
+            <view class="weui-cell"  @tap="showInner" wx:if="{{leiyi}}">
                 <view class="weui-cell__hd">
                     <view class="weui-label">商品分类</view>
                 </view>
@@ -68,6 +68,7 @@
     export default class DeliveryEdit extends wepy.page {
         def = {
             init: false,
+            leiyi:false,
             mode: 'create',
             isInnerDisplay: false,
             innerCategories: [],

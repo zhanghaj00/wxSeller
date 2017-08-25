@@ -6,7 +6,7 @@
 
     <!--列表展现-->
     <repeat for="{{page.list}}" key="index" index="index" item="item">
-      <GoodsScoreItem />
+      <GoodsScoreItem :comment="item" />
     </repeat>
 
     <!-- 加载提示 -->
@@ -45,17 +45,18 @@
       const count = await comment.count(goodsId);
       this.tab = {
         list: [
-          {id: 'GOOD', title: `好评（${count.GOOD}）`},
-          {id: 'NORMAL', title: `中评（${count.NORMAL}）`},
-          {id: 'BAD', title: `差评（${count.BAD}）`}
+          {id: 'GOOD', title: `好评（${count.good}）`},
+          {id: 'NORMAL', title: `中评（${count.normal}）`},
+          {id: 'BAD', title: `差评（${count.bad}）`}
         ],
         selectedId: 'GOOD'
       };
-      this.page = comment.page();
+      this.page = await comment.page();
+      console.log(this.page)
       await this.next();
     };
     params() {
-      return {status: this.tab.selectedId, goods_id: this.goodsId};
+      return {starMark: this.tab.selectedId, goods_id: this.goodsId};
     }
     methods = {
       switchTab() {
