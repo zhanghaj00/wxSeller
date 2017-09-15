@@ -65,8 +65,8 @@ export default class extends wepy.app {
     // baseUrl: 'https://api.leshare.shop/v1/seller',
     // baseUrl: 'http://121.42.178.251:9999/v1/seller'
     // baseUrl: 'http://192.168.31.124:9999/v1/seller'
-     baseUrl: 'http://localhost:9999/v1/seller'
-    //   baseUrl: 'http://150.95.142.164:9999/v1/seller'
+     baseUrl: 'http://192.168.10.182:9999/v1/seller'
+     //  baseUrl: 'https://www.xedtion.com/v1/seller'
   }
 
   config = {
@@ -75,6 +75,8 @@ export default class extends wepy.app {
       'pages/shop/contact',
       'pages/delivery/list',
       'pages/delivery/edit',
+      'pages/supplier/list',
+      'pages/supplier/edit',
       'pages/goods/comment',
       'pages/notice/list',
       'pages/notice/edit',

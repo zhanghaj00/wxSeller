@@ -42,6 +42,8 @@
           <view class="weui-cell__ft weui-cell__ft_in-access"></view>
         </view>
 
+        <Picker :range.sync="supplierList" title="选择供应商" fieldName="supplierId" :input.sync="input" @input.user="seletedType"/>
+
         <view class="weui-cell"  @tap="details">
           <view class="weui-cell__hd">
             <view class="weui-label">商品详情</view>
@@ -104,7 +106,9 @@
   import wepy from 'wepy';
   import base from '../../mixins/base';
   import input from '../../mixins/input';
+  import Picker from '../../components/weui/picker';
   import goods from '../../api/goods';
+  import supplier from '../../api/supplier';
   import SkuList from '../../components/goods/sku_list';
   import ImageUploader from '../../components/goods/image_uploader';
   import Tips from '../../utils/Tips';
@@ -128,12 +132,14 @@
       mode: 'create',
       innerCategories: [],
       init: false,
-      isInnerDisplay: 'false'
+      isInnerDisplay: 'false',
+      supplierList: [{value:0,key:'请选择'}],
     }
     data = {...this.def};
     async onLoad ({goodsId, mode}) {
       this.mode = mode;
       this.innerCategories = await goods.getInnerCategories();
+      this.supplierList = this.processSupplier(await supplier.list());
       if (this.mode == 'edit') {
         const detail = await goods.detail(goodsId);
         this.pictures = detail.pictures;
@@ -146,6 +152,9 @@
       this.loaded();
     };
     methods = {
+      seletedType(data) {
+        this.input.supplierId = data.value;
+      },
       // 提交表单
       async submit() {
         if (!this.validate()) {
@@ -254,6 +263,13 @@
     detailsUpdate(details) {
       this.details = details;
     }
+
+    processSupplier(supplier){
+      const valus =[];
+      supplier.map(item=> valus.push({value:item.id,key:item.name}))
+
+      return valus;
+    }
     // 检验
     validate() {
       const picturesNum = this.pictures.length;
@@ -265,6 +281,11 @@
           method: 'min',
           param: 1,
           message: '请上传商品图片'
+        },
+        {
+          value:this.input.supplierId,
+          method:'required',
+          message:'必须选择供应商'
         },
         {
           value: this.input.name,
@@ -379,7 +400,8 @@
       ActionBar: ActionBar,
       SkuList: SkuList,
       ImageUploader: ImageUploader,
-      SliderPanel: SliderPanel
+      SliderPanel: SliderPanel,
+      Picker:Picker
     };
     mixins = [base, input];
     config = {

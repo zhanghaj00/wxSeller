@@ -4,48 +4,9 @@
         <view class="mt10"></view>
         <!--表单-->
         <view class="weui-cells-form">
-            <Picker :range="type" title="配送方式" fieldName="type" :input.sync="input" @input.user="seletedType"/>
-            <InputText_name title="模板名称" :input.sync="input"/>
-            <view class="weui-cell"  @tap="showInner" wx:if="{{leiyi}}">
-                <view class="weui-cell__hd">
-                    <view class="weui-label">商品分类</view>
-                </view>
-                <view class="weui-cell__bd" >
-                    {{input.inner ? input.inner : '请选择商品分类'}}
-                </view>
-                <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-            </view>
-            <InputText_limitPrice title="起送价格" :input.sync="input" type="digit"/>
-            <InputText_fee title="运费" :input.sync="input" type="digit"/>
-            <InputText_location title="配送范围" :input.sync="input"/>
+            <InputText_name title="供应商名称" :input.sync="input"/>
+            <InputText_desc title="供应商描述" :input.sync="input"/>
         </view>
-        <SliderPanel :display.sync="isInnerDisplay" btn='false'>
-            <view slot="title">商品分类</view>
-            <view slot="content" class="weui-cells-form">
-                <radio-group id="inner" key="" bindchange="radio" @tap="selectInner">
-                    <label class="weui-cell weui-check__label" wx:for="{{innerCategories}}" wx:key="value">
-                        <radio class="weui-check" value="{{item.name}}" checked="{{input.inner == item.name}}"/>
-                        <view class="weui-cell__bd">{{item.name}}</view>
-                        <view class="weui-cell__ft weui-cell__ft_in-radio" wx:if="{{input.inner == item.name}}">
-                            <icon class="weui-icon-radio" type="success_no_circle" size="16"></icon>
-                        </view>
-                    </label>
-                </radio-group>
-
-                <!-- 新增分类 -->
-                <view class="weui-cell weui-cell_input weui-cell_vcode">
-                    <view class="weui-cell__hd">
-                        <view class="weui-label"> + 新增分类</view>
-                    </view>
-                    <view class="weui-cell__bd">
-                        <input class="weui-input" id="newInner" @input="input" placeholder="输入分类名称" />
-                    </view>
-                    <view class="weui-cell__ft">
-                        <view class="weui-vcode-btn" @tap="addInner">确定</view>
-                    </view>
-                </view>
-            </view>
-        </SliderPanel>
         <!--操作栏-->
         <ActionBar @tap.user="submit" />
     </view>
@@ -55,34 +16,25 @@
     import wepy from 'wepy';
     import base from '../../mixins/base';
     import input from '../../mixins/input';
-    import delivery from '../../api/delivery';
+    import supplier from '../../api/supplier';
     import goods from '../../api/goods'
     import Tips from '../../utils/Tips';
     import Event from '../../utils/Event';
     import FormTips from '../../components/weui/tips';
-    import Picker from '../../components/weui/picker';
     import InputText from '../../components/weui/input';
     import ActionBar from '../../components/common/action_bar';
     import SliderPanel from '../../components/common/slider_panel';
 
-    export default class DeliveryEdit extends wepy.page {
+    export default class SupplierEdit extends wepy.page {
         def = {
             init: false,
-            leiyi:false,
             mode: 'create',
-            isInnerDisplay: false,
-            innerCategories: [],
-            type: [
-                {value: 'EXPRESS', key: '快递配送'}
-            ]
         }
         data = {...this.def};
-        async onLoad ({mode, deliveryId}, {preload}) {
+        async onLoad ({mode, supplierId}, {preload}) {
             this.mode = mode;
-            this.innerCategories = await goods.getInnerCategories();
             if (mode == 'edit') {
-                this.input = preload.delivery;
-                this.input.inner = this.innerCategories.find(item => item.id ==  preload.delivery.innerCid).name
+                this.input = preload.supplier;
             }
             this.loaded();
         };
@@ -94,96 +46,30 @@
                 if (!this.validate()) {
                     return;
                 }
-                this.input.innerCid = this.innerCategories.find(item => item.name == this.input.inner).id;
                 console.log(this.input)
                 if (this.mode == 'edit') {
-                    await delivery.update(this.input.id, this.input);
+                    await supplier.update(this.input.id, this.input);
                     await Tips.success('更新成功！');
                 } else {
-                    await delivery.create(this.input);
+                    await supplier.create(this.input);
                     await Tips.success('创建成功！');
                 }
-                Event.emit(Event.DELIVERY_LIST_UPDATE);
+                Event.emit(Event.SUPPLIER_LIST_UPDATE);
                 wepy.navigateBack();
-            },
-            // 选择分类
-            selectInner() {
-                this.isInnerDisplay = 'false';
-            },
-            // 展现分类
-            showInner() {
-                this.isInnerDisplay = 'true';
-            },
-            // 新增分类
-            async addInner() {
-                const name = this.input.newInner;
-                console.log(name)
-                await goods.addInnerCategories(name);
-                this.innerCategories = await goods.getInnerCategories();
-                this.loaded();
             },
         };
         validate() {
             const rules = [
                 {
-                    value: this.input.type,
-                    method: 'required',
-                    message: '请选择配送方式'
-                },
-                {
                     value: this.input.name,
                     method: 'required',
-                    message: '请输入模板名称'
+                    message: '请输入供应商名称'
                 },
                 {
                     value: this.input.name,
                     method: 'maxlength',
                     param: '15',
-                    message: '模板名称太长'
-                },
-                {
-                    value: this.input.limitPrice,
-                    method: 'required',
-                    message: '起送价格必填'
-                },
-                {
-                    value: this.input.limitPrice,
-                    method: 'number',
-                    message: '起送价格必须为数字'
-                },
-                {
-                    value: this.input.limitPrice,
-                    method: 'min',
-                    param: '0',
-                    message: '起送价格不能为负数'
-                },
-                {
-                    value: this.input.limitPrice,
-                    method: 'max',
-                    param: '10000',
-                    message: '起送价格太高'
-                },
-                {
-                    value: this.input.fee,
-                    method: 'required',
-                    message: '运费必填'
-                },
-                {
-                    value: this.input.fee,
-                    method: 'number',
-                    message: '运费必须为数字'
-                },
-                {
-                    value: this.input.fee,
-                    method: 'min',
-                    param: '0',
-                    message: '运费不能为负数'
-                },
-                {
-                    value: this.input.fee,
-                    method: 'max',
-                    param: '10000',
-                    message: '运费价格太高'
+                    message: '供应商名称太长'
                 }
             ];
             return this.check(rules);
@@ -192,16 +78,13 @@
         components = {
             Tips: FormTips,
             ActionBar: ActionBar,
-            Picker: Picker,
             InputText_name: InputText,
-            InputText_limitPrice: InputText,
-            InputText_fee: InputText,
-            InputText_location: InputText,
+            InputText_desc: InputText,
             SliderPanel: SliderPanel
         };
         mixins = [base, input];
         config = {
-            navigationBarTitleText: '编辑模板'
+            navigationBarTitleText: '编辑供应商'
         };
     }
 </script>

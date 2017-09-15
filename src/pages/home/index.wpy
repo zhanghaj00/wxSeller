@@ -3,7 +3,7 @@
   <view class="page" wx:if="{{init}}">
     <view class="brand column-center">
       <image class="logo" src="/images/home/shop-logo.png"/>
-      <text>乐享商家助手</text>
+      <text>商家助手</text>
     </view>
     <view class="page__bd form">
 
@@ -76,7 +76,7 @@
       }
     }
     confirm(){
-      this.loaded();
+      this.onLoad();
     }
 
     checkLoginTime () {
@@ -90,6 +90,9 @@
     methods = {
       async loginIn(){
         return await auth.login();
+      },
+      async confirm(){
+        this.confirm();
       }
     };
     mixins = [input, base];
@@ -110,7 +113,7 @@
     padding-bottom: 60rpx;
 
     .logo{
-      width: 100px;
+      width: 130px;
       height: 100px;
     }
 

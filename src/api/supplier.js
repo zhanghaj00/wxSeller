@@ -11,6 +11,13 @@ export default class supplier extends base {
     }
 
     /**
+     * 全部方法
+     */
+    static list () {
+        const url = `${this.baseUrl}/supplier`;
+        return this.get(url);
+    }
+    /**
      * 创建
      */
     static create(supplier) {
