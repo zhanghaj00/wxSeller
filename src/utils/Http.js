@@ -41,6 +41,7 @@ export default class http {
     const error = {};
     error.statusCode = res.statusCode;
     const wxData = res.data;
+    Tips.alert(res.data.errmsg);
     const serverData = wxData.data;
     if (serverData) {
       error.serverCode = wxData.code;

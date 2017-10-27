@@ -28,6 +28,7 @@
   import Loadmore from '../../components/weui/loadmore';
   import DeliveryItem from '../../components/delivery/item';
 
+
   export default class NoticeIndex extends wepy.page {
     def = {
       init: true,

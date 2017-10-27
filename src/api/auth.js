@@ -5,12 +5,11 @@ export default class auth extends base {
   /**
    * 登录
    */
-  static async login() {
+  static async login(phone) {
     const login_code = await wepy.login();
-    const url = `${this.baseUrl}/auth/login?code=`+login_code.code;
+    const url = `${this.baseUrl}/auth/login?code=`+login_code.code +`&phone=`+phone;
     const data = await this.get(url);
-    this.setConfig("login_code",data.third_session);
-    return data.third_session;
+    return data;
   }
   /**
    * 短信验证码

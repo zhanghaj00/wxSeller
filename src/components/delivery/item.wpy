@@ -2,7 +2,9 @@
     <view class="notice-box column">
         <view class="content-box row">
             <text class="lg">{{delivery.name}}</text>
-            <text class="desc inline_nowrap">￥{{delivery.limitPrice}}起送 | 配送费￥{{delivery.fee}} | {{delivery.location}}| 配送地址 :{{delivery.location}} | 所属分类 :{{delivery.innerCidName}}</text>
+            <text class="desc inline_nowrap">
+                供应商：{{delivery.supplierName}} - 配送费￥{{delivery.fee}}
+            </text>
 
         </view>
         <view class="btn-box row-end">

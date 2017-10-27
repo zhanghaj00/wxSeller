@@ -100,21 +100,22 @@ export default class goods extends base {
       isRecommend: goods.isRecommend == 1,
       globalCid: goods.globalCid,
       innerCid: goods.innerCid,
-      goodsId: goods.id
+      goodsId: goods.id,
+      supplierId:goods.supplierId
     }
     let skuList;
     const details = goods.goodsDetails ? goods.goodsDetails : [];
     if (goods.goodsSkuInfo == null || goods.goodsSkuInfo.goodsSkuDetails == null) {
       skuList = [{
         price: goods.sellPrice,
-        stock: goods.goodsStocks[0].stock,
+        stock: goods.stock,
         sku: null
       }];
     } else {
       skuList = goods.goodsSkuInfo.goodsSkuDetails.map(item => {
         const price = parseFloat(item.goodsSkuDetailBase.price).toFixed(2);
         const sku = item.sku;
-        const stock = 1;//goods.goodsStocks.find(item => item.sku == sku).stock;
+        const stock = goods.goodsStocks.find(item => item.sku == sku).stock;
         return {price, sku, stock};
       });
     }

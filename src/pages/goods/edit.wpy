@@ -32,17 +32,17 @@
           <view class="weui-cell__ft weui-cell__ft_in-access"></view>
         </view>
 
-        <view class="weui-cell"  @tap="select">
+        <!--<view class="weui-cell"  @tap="select">
           <view class="weui-cell__hd">
             <view class="weui-label">运费</view>
           </view>
           <view class="weui-cell__bd">
-            请选择运费模板
+            请选择运费(供应商)
           </view>
           <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-        </view>
+        </view>-->
 
-        <Picker :range.sync="supplierList" title="选择供应商" fieldName="supplierId" :input.sync="input" @input.user="seletedType"/>
+        <Picker :range.sync="supplierList"  title="选择供应商(运费)" fieldName="supplierId" :input.sync="input" @input.user="seletedType"/>
 
         <view class="weui-cell"  @tap="details">
           <view class="weui-cell__hd">
@@ -124,6 +124,7 @@
       },
       details: [],
       pictures: [],
+      supplierName:'',
       skuList: [{
         sku: '',
         price: '',
@@ -146,7 +147,9 @@
         this.input = detail.input;
         this.details = detail.details;
         this.skuList = detail.skuList;
-        this.input.inner = this.innerCategories.find(item => item.id == this.input.innerCid).name
+        this.input.inner = this.innerCategories.find(item => item.id == this.input.innerCid).name;
+        this.input.supplierName = this.supplierList.find(item => item.value == this.input.supplierId).key;
+
       }
       Event.listen(Event.GOODS_DETAILS_UPDATE, this.detailsUpdate.bind(this), this);
       this.loaded();
@@ -164,21 +167,23 @@
           goodsDetails: [],
           goodsSkuInfo: {},
           goodsStocks: [],
-          images: []
+          images:[]
         }
         Tips.loading();
         // 处理图片信息
+        var seq = 0;
         for (let picture of this.pictures) {
           if (picture.url.substring(0, 6) == 'wxfile') {
             const result = await goods.image(picture.url);
             const image = JSON.parse(result);
-            data.images.push(image);
+            data.images.push(image.data);
           } else {
             data.images.push(picture);
           }
         }
         // 字段信息
         data.name = this.input.name;
+        data.supplierId = this.input.supplierId;
         data.isRecommend = this.input.isRecommend ? 1 : 0;
         data.globalCid = 1; // 待完善
         data.status = this.input.status ? 0 : 1;
