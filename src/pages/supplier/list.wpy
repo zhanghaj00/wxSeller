@@ -38,7 +38,7 @@
     }
     data = {...this.def};
     async onLoad () {
-      this.page = supplier.page();
+      this.page = await supplier.page();
       await this.next();
       Event.listen(Event.SUPPLIER_LIST_UPDATE, this.update.bind(this), this);
     };
@@ -60,7 +60,7 @@
     };
     mixins = [base, pagination];
     config = {
-      navigationBarTitleText: '运费模板',
+      navigationBarTitleText: '供应商模板',
       enablePullDownRefresh: true
     };
   }

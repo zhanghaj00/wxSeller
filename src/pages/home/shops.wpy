@@ -17,7 +17,7 @@
     </view>
 
     <!--占位符-->
-    <Placeholder :list="shops" :show.sync="isPageEmpty" message="您还没有创建店铺" type="add" @tap.user="add"/>
+    <Placeholder :list="shops" :show.sync="isPageEmpty"  message="您还没有创建店铺" type="add"   @tap.user="add" />
 
     <!--操作栏-->
     <ActionBar okText="切换账号" noCancel @tap.user="back" />
@@ -35,16 +35,17 @@
   import Placeholder from '../../components/common/placeholder';
   import ActionBar from '../../components/common/action_bar';
   import Event from '../../utils/Event';
+
   export default class ShopList extends wepy.page {
     def = {
       shops: [],
       init: false,
       isPageEmpty: false
     };
-    data = {...this.def};
+    data = {...this.def} ;
     async onLoad () {
       this.shops = await shop.list();
-      this.isPageEmpty = this.shops.length < 1;
+      this.isPageEmpty = this.shops.length < 1 ;
       Event.listen(Event.SHOP_LIST_UPDATE, this.onLoad.bind(this), this);
       this.loaded();
     };

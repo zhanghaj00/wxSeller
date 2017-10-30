@@ -1,7 +1,7 @@
 const prod = process.env.NODE_ENV === 'production'
 
 module.exports = {
-  wpyExt: '.wpy',
+  wpyExt: '.vue',
   build: {
     web: {
     }

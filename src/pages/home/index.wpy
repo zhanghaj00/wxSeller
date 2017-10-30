@@ -9,12 +9,12 @@
       <view class="weui-cell__hd">
         <view class="weui-label">手机号</view>
       </view>
-      <view class="weui-cell__hd">
-        <input class="weui-input" type="tel" value="{{input.phone}}" placeholder="请输入手机号" id="phone" name="phone" @input="input" />
+      <view class="weui-cell__hd" style="border: dashed">
+        <input class=""  value="{{input.phone}}"  id="phone" name="phone" @input="input" />
       </view>
-      <view class="weui-btn-area">
-        <button class="weui-btn" type="primary" @tap="confirm">登录</button>
-      </view>
+    </view>
+    <view class="weui-btn-area">
+      <button class="weui-btn" type="primary" @tap="confirm">登录</button>
     </view>
   </view>
 
