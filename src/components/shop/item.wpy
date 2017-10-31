@@ -1,5 +1,5 @@
 <template>
-  <view class="item-box row">
+  <view class="item-box row" @tap="tap">
     <image class="shop-icon icon-xl" src="{{shop.avatar}}"/>
     <text class="shop-title xxl">{{shop.name}}</text>
   </view>
@@ -12,7 +12,11 @@
       shop: {}
     };
     data = {};
-    methods = {};
+    methods = {
+      tap() {
+        this.$emit('tap',this.shop.id);
+      }
+    };
     events = {};
   }
 </script>

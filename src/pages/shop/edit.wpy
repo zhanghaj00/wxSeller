@@ -69,12 +69,15 @@
       async submit() {
         if (!this.validate()) {
            return;
-     }
+        }
         if (this.mode == 'create') {
         for (let picture of this.pictures) {
+            console.log(picture);
          if (picture.url.substring(0, 6) == 'wxfile') {
            const result = await goods.image(picture.url);
+
            const image = JSON.parse(result);
+             console.log(image);
            this.data.images.push(image.data);
          }
          };

@@ -9,8 +9,8 @@
       <!--店铺列表-->
       <view class="list-box column">
         <repeat for="{{shops}}" key="index" index="index" item="item">
-          <view @tap="enter({{item.id}})">
-            <ShopItem :shop.sync="item"></ShopItem>
+          <view >
+            <ShopItem :shop.sync="item" type="enter"   @tap.user="enter" ></ShopItem>
           </view>
         </repeat>
       </view>

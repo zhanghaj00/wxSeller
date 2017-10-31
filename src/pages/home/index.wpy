@@ -9,7 +9,7 @@
       <view class="weui-cell__hd">
         <view class="weui-label">手机号</view>
       </view>
-      <view class="weui-cell__hd" style="border: dashed">
+      <view class="weui-cell__hd">
         <input class=""  value="{{input.phone}}"  id="phone" name="phone" @input="input" />
       </view>
     </view>
